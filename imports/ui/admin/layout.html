@@ -1,0 +1,29 @@
+<template name="adminLayout">
+    <div id="wrapper">
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <span style="color:#ddd">红苹果捐赠管理中心</span>
+                </li>
+                <li class="page-item {{isActiveRoute 'admin.facility'}}">
+                    <a href="/admin/facility">设备管理</a>
+                </li>
+                <li class="page-item {{isActiveRoute 'admin.donation'}}">
+                    <a href="/admin/donation">捐赠管理</a>
+                </li>
+                <li class="page-item {{isActiveRoute 'admin.analyse'}}">
+                    <a href="/admin/analyse">数据分析</a>
+                </li>
+            </ul>
+            <div style="position:absolute;bottom: 0">
+                {{>loginButtons}}
+            </div>
+        </div>
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                {{>yield}}
+            </div>
+        </div>
+
+    </div>
+</template>

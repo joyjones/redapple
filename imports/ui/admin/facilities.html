@@ -1,0 +1,65 @@
+
+<template name="facilityPage">
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>设备编号</th>
+                <th>类型</th>
+                <th>所在地</th>
+                <th>创建时间</th>
+                <th>累计捐赠量(kg)</th>
+                <th>当前捐赠量(kg)</th>
+                <th>状态</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each facilities}}
+                <tr class="facrow">
+                    <td>{{_id}}</td>
+                    <td>{{getTypeName type}}</td>
+                    <td>{{addr}}</td>
+                    <td>{{created_at}}</td>
+                    <td>{{weight_acc}}</td>
+                    <td>{{weight_now}}</td>
+                    <td>{{status}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    <button class="btn btn-primary add">添加设备</button>
+    <button class="btn btn-warning modify {{modifyButtonState}}">修改设备</button>
+    <button class="btn btn-danger remove {{modifyButtonState}}">删除设备</button>
+</template>
+
+<template name="facilityCreatePage">
+    <form class="form">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="/admin/facility">设备管理</a> / 添加设备
+            </div>
+            <div class="panel-body">
+                <div class="form-group col-lg-12">
+                    <label>类型:</label>
+                    <select class="form-control" id="fac_type">
+                        <option value="1">红苹果捐赠机</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-12">
+                    <label>所在地:</label>
+                    <input type="text" class="form-control" id="fac_addr" value="">
+                </div>
+            </div>
+
+            <div class="alert-container">
+                {{#if errorMessage}}
+                    <div class="alert">
+                        <span><i class="icon-sign"></i>{{errorMessage}}</span>
+                    </div>
+                {{/if}}
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">添加</button>
+            </div>
+        </div>
+    </form>
+</template>
