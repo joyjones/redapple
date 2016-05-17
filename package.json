@@ -1,11 +1,10 @@
 {
-  "name": "proj1",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.html",
+  "name": "hello",
+  "private": true,
   "scripts": {
-    "test": "npm start"
+    "start": "meteor run"
   },
-  "author": "",
-  "license": "ISC"
+  "dependencies": {
+    "meteor-node-stubs": "~0.2.0"
+  }
 }
