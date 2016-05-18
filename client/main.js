@@ -7,6 +7,7 @@ import '../imports/ui/admin/facilities.html';
 import '../imports/ui/admin/donations.html';
 import '../imports/ui/admin/analyse.html';
 
+
 Router.route('/', function () {
     this.render('appPage');
     this.layout('appLayout');
