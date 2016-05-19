@@ -14,24 +14,29 @@
         </thead>
         <tbody>
             {{#each facilities}}
-                <tr class="facrow">
-                    <td>{{_id}}</td>
-                    <td>{{getTypeName type}}</td>
-                    <td>{{addr}}</td>
-                    <td>{{created_at}}</td>
-                    <td>{{weight_acc}}</td>
-                    <td>{{weight_now}}</td>
-                    <td>{{status}}</td>
-                </tr>
+                {{> facilityRow}}
             {{/each}}
         </tbody>
     </table>
     <button class="btn btn-primary add">添加设备</button>
-    <button class="btn btn-warning modify {{modifyButtonState}}">修改设备</button>
-    <button class="btn btn-danger remove {{modifyButtonState}}">删除设备</button>
+    <button class="btn btn-warning modify {{#unless hasSelectedRow}}disabled{{/unless}}">修改设备</button>
+    <button class="btn btn-danger remove {{#unless hasSelectedRow}}disabled{{/unless}}">删除设备</button>
 </template>
 
-<template name="facilityCreatePage">
+<template name="facilityRow">
+    <tr class="facrow {{#if isSelected}}selected{{/if}}">
+        <td>{{_id}}</td>
+        <td>{{getTypeName type}}</td>
+        <td>{{addr}}</td>
+        <td>{{created_at}}</td>
+        <td>{{weight_acc}}</td>
+        <td>{{weight_now}}</td>
+        <td>{{status}}</td>
+    </tr>
+</template>
+
+<template name="facilityForm">
+    {{#with curModel}}
     <form class="form">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -41,12 +46,14 @@
                 <div class="form-group col-lg-12">
                     <label>类型:</label>
                     <select class="form-control" id="fac_type">
-                        <option value="1">红苹果捐赠机</option>
+                        {{#each types}}
+                            <option value="{{type}}" selected="{{#if isCurType type}}selected{{/if}}">{{name}}</option>
+                        {{/each}}
                     </select>
                 </div>
                 <div class="form-group col-lg-12">
                     <label>所在地:</label>
-                    <input type="text" class="form-control" id="fac_addr" value="">
+                    <input type="text" class="form-control" id="fac_addr" value="{{curModel.addr}}">
                 </div>
             </div>
 
@@ -58,8 +65,11 @@
                 {{/if}}
             </div>
             <div class="panel-footer">
-                <button type="submit" class="btn btn-primary">添加</button>
+                <button type="submit" class="btn btn-primary">
+                    {{#if createMode}}添加{{else}}修改{{/if}}
+                </button>
             </div>
         </div>
     </form>
+    {{/with}}
 </template>

@@ -11,6 +11,10 @@ import './analyse.html';
 import { Facilities, FacilityTypes } from '../../api/facilities.js';
 import { ReactiveDict } from 'meteor/reactive-dict';
 
+const state = new ReactiveDict("facilityPage");
+const stateKey_selFacility = 'selFacility';
+const stateKey_curFacility = 'curFacility';
+
 Template.loginPage.helpers({
     errorMessage(){
         return Session.get('errorMessage');
@@ -41,60 +45,48 @@ Template.facilityPage.helpers({
     facilities(){
         return Facilities.find({});
     },
-    isRowSelected(){
-        return $('tr.facrow.selected').length > 0;
+    hasSelectedRow(){
+        return state.get(stateKey_selFacility) != undefined;
+    }
+});
+
+Template.facilityPage.events({
+    'click button.add'(){
+        state.set(stateKey_curFacility, {type: 1, addr: '', created_at: (new Date()).getTime()});
+        Router.go('admin.facility.create');
     },
-    modifyButtonState(){
-        const idx = Template.instance().curRowIndex();
-        return idx >= 0 ? '' : 'disabled';
+    'click button.modify'(){
+        state.set(stateKey_curFacility, state.get(stateKey_selFacility));
+        Router.go('admin.facility.modify');
     },
+    'click button.remove'(){
+        if (confirm('真的要删除当前选择的设备吗?')) {
+            const fac = state.get(stateKey_selFacility);
+            Facilities.remove(fac._id);
+        }
+    }
+});
+
+Template.facilityRow.helpers({
     getTypeName(type){
         const rec = FacilityTypes.findOne({type: Number(type)});
         if (rec)
             return rec.name;
         return "[unknown for ${type}]";
+    },
+    isSelected(){
+        const fac = state.get(stateKey_selFacility);
+        return fac != undefined && fac._id == this._id;
     }
 });
 
-const state = new ReactiveDict("facilityPage");
-
-Template.facilityPage.onCreated(function(){
-    this.state = state;
-    this.selectRow = function(index){
-        state.set('selrow', index);
-    };
-    this.curRowIndex = function(){
-        return state.get('selrow');
-    };
-    this.selectRow(-1);
-});
-
-Template.facilityPage.events({
-    'click button.add'(){
-        Router.go('admin.facility.create');
-    },
-    'click button.modify'(){
-        Router.go('admin.facility.modify');
-    },
-    'click button.remove'(){
-        if (confirm('真的要删除当前选择的设备吗?')){
-            let idx = Template.instance().curRowIndex() + 1;
-            let id = $('tr.facrow:nth-child('+idx+') td').eq(0).html();
-            Facilities.remove(id);
-        }
-    },
-    'click tr.facrow'(event){
-        const inst = Template.instance();
-        let idx = inst.curRowIndex();
-        if (idx >= 0)
-            $('tr.facrow').eq(idx).removeClass('selected');
-        idx = event.target.parentNode.rowIndex - 1;
-        $('tr.facrow').eq(idx).addClass('selected');
-        inst.selectRow(idx);
+Template.facilityRow.events({
+    'click tr.facrow'(){
+        state.set(stateKey_selFacility, this);
     }
 });
 
-Template.facilityCreatePage.events({
+Template.facilityForm.events({
     'submit form'(event){
         var type = event.target.fac_type.value;
         var addr = event.target.fac_addr.value;
@@ -106,8 +98,30 @@ Template.facilityCreatePage.events({
             alert('addr err');
             return false;
         }
-        Facilities.insert({type: type, addr: addr, created_at: (new Date()).getTime()});
+        if (Router.name == 'admin.facility.modify')
+            Facilities.update(this._id, {$set: {type: type, addr: addr, created_at: (new Date()).getTime()}});
+        else
+            Facilities.insert({type: type, addr: addr, created_at: (new Date()).getTime()});
         Router.go('admin.facility');
         return false;
+    }
+});
+
+Template.facilityForm.helpers({
+    curModel(){
+        return state.get(stateKey_curFacility);
+    },
+    createMode(){
+        return (Router.name == 'admin.facility.create');
+    },
+    modifyMode(){
+        return (Router.name == 'admin.facility.modify');
+    },
+    types(){
+        return FacilityTypes.find({});
+    },
+    isCurType(type){
+        const fac = state.get(stateKey_selFacility);
+        return fac != undefined && fac.type == type;
     }
 });

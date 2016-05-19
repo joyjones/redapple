@@ -37,9 +37,14 @@ Router.route('/admin/facility', function () {
 }, {name: 'admin.facility'});
 
 Router.route('/admin/facility/create', function () {
-    this.render('facilityCreatePage');
+    this.render('facilityForm');
     this.layout('adminLayout');
 }, {name: 'admin.facility.create'});
+
+Router.route('/admin/facility/modify', function () {
+    this.render('facilityForm');
+    this.layout('adminLayout');
+}, {name: 'admin.facility.modify'});
 
 Router.route('/admin/analyse', function () {
     this.render('analysePage');
