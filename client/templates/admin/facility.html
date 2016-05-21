@@ -1,0 +1,47 @@
+<template name="adminFacility">
+    <form class="form">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="/admin/facilities">设备管理</a>/
+                {{#if createMode}}
+                    创建设备
+                {{else}}
+                    编辑设备
+                {{/if}}
+            </div>
+            <div class="panel-body">
+                {{#unless createMode}}
+                    <div class="form-group col-lg-12">
+                        <label>设备编号:</label>
+                        <input type="text" class="form-control" id="fac_id" value="{{_id}}" readonly>
+                    </div>
+                {{/unless}}
+                <div class="form-group col-lg-12">
+                    <label>类型:</label>
+                    <select class="form-control" id="fac_type">
+                        {{#each types}}
+                            <option value="{{type}}" selected="{{#if isCurType}}selected{{/if}}">{{name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="form-group col-lg-12">
+                    <label>所在地:</label>
+                    <input type="text" class="form-control" id="fac_addr" value="{{addr}}">
+                </div>
+            </div>
+
+            <div class="alert-container">
+                {{#if errorMessage}}
+                    <div class="alert">
+                        <span><i class="icon-sign"></i>{{errorMessage}}</span>
+                    </div>
+                {{/if}}
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">
+                    {{#if createMode}}创建{{else}}保存{{/if}}
+                </button>
+            </div>
+        </div>
+    </form>
+</template>

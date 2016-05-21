@@ -1,0 +1,27 @@
+
+<template name="adminDonations">
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+        <tr>
+            <th>时间</th>
+            <th>用户</th>
+            <th>设备</th>
+            <th>重量(kg)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each donations}}
+            {{> donationRow}}
+        {{/each}}
+        </tbody>
+    </table>
+</template>
+
+<template name="donationRow">
+    <tr class="donrow {{#if isSelected}}selected{{/if}}">
+        <td>{{timeText time}}</td>
+        <td>{{userId}}</td>
+        <td>{{facilityId}}</td>
+        <td>{{g2kg weight}}</td>
+    </tr>
+</template>

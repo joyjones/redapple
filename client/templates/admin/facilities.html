@@ -1,0 +1,43 @@
+
+<template name="adminFacilities">
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+        <tr>
+            <th>设备编号</th>
+            <th>类型</th>
+            <th>所在地</th>
+            <th>创建时间</th>
+            <th>当前捐赠量(kg)</th>
+            <th>累计捐赠量(kg)</th>
+            <th>状态</th>
+            <th>管理</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each facilities}}
+            {{> facilityRow}}
+        {{/each}}
+        </tbody>
+    </table>
+    <button class="btn btn-primary add">添加设备</button>
+</template>
+
+<template name="facilityRow">
+    <tr class="facrow {{#if isSelected}}selected{{/if}}">
+        <td>{{_id}}</td>
+        <td>{{getTypeName type}}</td>
+        <td>{{addr}}</td>
+        <td>{{timeText createdAt}}</td>
+        <td>{{g2kg curWeight}}</td>
+        <td>{{g2kg accWeight}}</td>
+        <td>{{status}}</td>
+        <td>
+            <button class="btn btn-info btn-xs edit">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+            </button>
+            <button class="btn btn-danger btn-xs remove">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </button>
+        </td>
+    </tr>
+</template>
