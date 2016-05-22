@@ -1,5 +1,59 @@
 
 <template name="app">
-    <h1>我的红苹果捐赠</h1>
-    <a href="/admin" >管理中心</a>
+    <style>
+        body{
+            margin: 0;
+            padding: 8px;
+        }
+        .tab1 .cap{
+            margin: 8px;
+        }
+        .tab1 .weight{
+            text-align: center;
+        }
+        .tab1 .weight .num{
+            font-size: 4em;
+            font-weight: bold;
+        }
+        .tab1 .weight .unit{
+            font-size: 2em;
+        }
+        .tab2 .donation{
+
+        }
+    </style>
+    <div class="userbar">
+        <img width="100" src="http://img3.imgtn.bdimg.com/it/u=1940481624,3917285320&fm=11&gp=0.jpg">
+        <div>孤胆飞影</div>
+        <div>累计捐赠: 12.99KG</div>
+    </div>
+    <div class="">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active">
+                <a href="#">本次捐赠</a>
+            </li>
+            <li role="presentation">
+                <a href="#">捐赠历史</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            {{#if firstTab}}
+                <div class="tab1">
+                    <div class="cap">本次捐赠重量:</div>
+                    <div class="weight">
+                        <span class="num">{{curWeight}}</span>
+                        <span class="unit">g</span>
+                    </div>
+                </div>
+            {{else}}
+                <div class="tab2">
+                    {{#each donations}}
+                        <div class="donation">
+
+                        </div>
+                    {{/each}}
+                </div>
+            {{/if}}
+        </div>
+    </div>
 </template>
