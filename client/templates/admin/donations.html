@@ -1,11 +1,25 @@
 
 <template name="adminDonations">
+    <div class="filter-form form-inline">
+        <div class="form-group col-lg-12">
+            <label for="filterFacility">设备:</label>
+            <select class="form-control" id="filterFacility">
+                {{#each facilityFilters}}
+                    <option value="{{_id}}" selected="{{#if isCurFacilityFilter}}selected{{/if}}">{{name}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="form-group col-lg-12">
+            <label for="filterUser">用户:</label>
+            <input type="text" class="form-control" id="filterUser" placeholder="请输入ID或昵称并回车">
+        </div>
+    </div>
     <table class="table table-bordered table-striped table-hover">
         <thead>
         <tr>
             <th>时间</th>
-            <th>用户</th>
             <th>设备</th>
+            <th>用户</th>
             <th>重量(kg)</th>
         </tr>
         </thead>
@@ -18,10 +32,12 @@
 </template>
 
 <template name="donationRow">
-    <tr class="donrow {{#if isSelected}}selected{{/if}}">
-        <td>{{timeText time}}</td>
-        <td>{{userId}}</td>
-        <td>{{facilityId}}</td>
-        <td>{{g2kg weight}}</td>
-    </tr>
+    {{#if isVisible}}
+        <tr class="donrow {{#if isSelected}}selected{{/if}}">
+            <td>{{timeText}}</td>
+            <td><a href="/admin/facility/{{facilityId}}">{{facilityName}}</a></td>
+            <td>{{{userName}}}</td>
+            <td>{{weight2kg}}</td>
+        </tr>
+    {{/if}}
 </template>

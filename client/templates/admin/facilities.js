@@ -1,16 +1,33 @@
 /**
  * Created by jones on 16/5/21.
  */
-Template.adminFacilities.helpers({
+Template.adminFacilities.onRendered(function(){
+    let filter = Iron.Location.get().hash;
+    if (filter && filter.length > 1) {
+        $('#facilityFilter').val(filter.substr(1)).change();
+    }
 });
 
 Template.adminFacilities.events({
     'click button.add'(){
         Router.go('admin.facilities.create');
+    },
+    'change #facilityFilter'(e){
+        Session.set('admin.facilities.filter', e.target.value);
     }
 });
 
 Template.facilityRow.helpers({
+    isVisible(){
+        let filter = Session.get('admin.facilities.filter');
+        if (!filter || !filter.length)
+            return true;
+        if (this._id.indexOf(filter) >= 0)
+            return true;
+        if (this.addr.includes(filter))
+            return true;
+        return false;
+    },
     getTypeName(type){
         const rec = FacilityTypes.findOne({type: Number(type)});
         if (rec)

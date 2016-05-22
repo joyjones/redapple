@@ -5,11 +5,14 @@
                 <li class="sidebar-brand">
                     <span style="color:#ddd">红苹果捐赠管理中心</span>
                 </li>
+                <li class="page-item {{isActiveRoute 'admin.donations'}}">
+                    <a href="{{pathFor 'admin.donations'}}">捐赠管理</a>
+                </li>
                 <li class="page-item {{isActiveRoute 'admin.facilities'}}">
                     <a href="{{pathFor 'admin.facilities'}}">设备管理</a>
                 </li>
-                <li class="page-item {{isActiveRoute 'admin.donations'}}">
-                    <a href="{{pathFor 'admin.donations'}}">捐赠管理</a>
+                <li class="page-item {{isActiveRoute 'admin.users'}}">
+                    <a href="{{pathFor 'admin.users'}}">用户管理</a>
                 </li>
                 <li class="page-item {{isActiveRoute 'admin.analyse'}}">
                     <a href="{{pathFor 'admin.analyses'}}">数据分析</a>
