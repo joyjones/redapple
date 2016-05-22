@@ -44,7 +44,7 @@ Template.userRow.helpers({
         return this.wxinfo.country + place;
     },
     registerTime(){
-        return moment(this.createdAt).format('YYYY-MM-DD HH:mm:ss');
+        return moment(this.createdAt).tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss');
     },
     donateCount(){
         return 0;

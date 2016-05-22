@@ -56,7 +56,7 @@ Template.donationRow.helpers({
     },
     timeText(){
         if (!this.time) return '';
-        return moment(this.time).format('YYYY-MM-DD HH:mm:ss');
+        return moment(this.time).tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss');
     },
     facilityName(){
         return utils.facilityName(this.facilityId);

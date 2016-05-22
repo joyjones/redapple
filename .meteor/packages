@@ -28,3 +28,4 @@ blaze-html-templates
 sacha:spin
 momentjs:moment
 nimble:restivus
+mrt:moment-timezone

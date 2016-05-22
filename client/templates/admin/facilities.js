@@ -40,7 +40,7 @@ Template.facilityRow.helpers({
     },
     timeText(t){
         if (!t) return '';
-        return moment(t).format('YYYY-MM-DD HH:mm:ss');
+        return moment(t).tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss');
     },
     g2kg(g){
         if (!g) return 0;

@@ -64,6 +64,8 @@ modules-runtime@0.6.3
 momentjs:moment@2.13.1
 mongo@1.1.7
 mongo-id@1.0.4
+mrt:moment@2.8.1
+mrt:moment-timezone@0.2.1
 nimble:restivus@0.8.10
 npm-bcrypt@0.8.5
 npm-mongo@1.4.43
