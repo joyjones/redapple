@@ -28,6 +28,14 @@
                     <label>所在地:</label>
                     <input type="text" class="form-control" id="fac_addr" value="{{addr}}">
                 </div>
+                <div class="form-group col-lg-12">
+                    <label>状态:</label>
+                    {{#each allStates}}
+                        <label class="checkbox-inline">
+                            <input class="state-check" type="checkbox" id="{{id}}" value="{{value}}" checked="{{checked}}" disabled="{{disabled}}">{{caption}}
+                        </label>
+                    {{/each}}
+                </div>
             </div>
 
             <div class="alert-container">

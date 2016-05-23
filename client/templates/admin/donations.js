@@ -44,7 +44,7 @@ Template.donationRow.helpers({
         if (userKey && userKey.length > 0) {
             let user = Meteor.users.findOne(this.userId);
             let hitId = user._id.includes(userKey);
-            let hitName = user.wxinfo.nickname.includes(userKey);
+            let hitName = user.profile.wxinfo.nickname.includes(userKey);
             if (!hitId && !hitName)
                 return false;
         }
@@ -65,12 +65,13 @@ Template.donationRow.helpers({
         if (!this.userId)
             return '<匿名用户>';
         let user = Meteor.users.findOne(this.userId);
-        if (!user || !user.wxinfo)
+        if (!user || !user.profile || !user.profile.wxinfo)
             return '<无效用户>';
         let imgs = '';
-        if (user.wxinfo.headImageUrl)
-            imgs = `<img src="${user.wxinfo.headImageUrl}" width="25">`;
-        let name = user.wxinfo.nickname;
+        let info = user.profile.wxinfo;
+        if (info.headImageUrl)
+            imgs = `<img src="${info.headImageUrl}" width="25">`;
+        let name = info.nickname;
         let id = this.userId;
         return `<a href="/admin/users#${id}">${imgs}${name}</a>`;
     },

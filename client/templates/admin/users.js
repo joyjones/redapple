@@ -21,40 +21,44 @@ Template.userRow.helpers({
             return true;
         if (this._id.indexOf(filter) >= 0)
             return true;
-        if (this.wxinfo.nickname.includes(filter))
+        if (this.profile.wxinfo.nickname.includes(filter))
             return true;
         return false;
     },
     userInfo(){
         let imgs = '';
-        if (this.wxinfo.headImageUrl)
-            imgs = `<img src="${this.wxinfo.headImageUrl}" width="25">`;
-        return imgs + this.wxinfo.nickname + "(" + this._id.substr(0, 4) + ")";
+        let info = this.profile.wxinfo;
+        if (info.headImageUrl)
+            imgs = `<img src="${info.headImageUrl}" width="25">`;
+        return imgs + info.nickname + "(" + this._id + ")";
     },
     userType(){
         return '捐赠用户';
     },
     sexType(){
-        return this.wxinfo.sex == 0 ? '未知' : (this.wxinfo.sex == 1 ? '男' : '女');
+        let sex = this.profile.wxinfo.sex;
+        return sex == 0 ? '未知' : (sex == 1 ? '男' : '女');
     },
     comeFrom(){
-        let place = this.wxinfo.province;
-        if (place != this.wxinfo.city)
-            place += this.wxinfo.city;
-        return this.wxinfo.country + place;
+        let info = this.profile.wxinfo;
+        let place = info.province;
+        if (place != info.city)
+            place += info.city;
+        return info.country + place;
     },
     registerTime(){
-        return moment(this.createdAt).tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss');
+        return moment(this.createdAt).format('YYYY-MM-DD HH:mm:ss');
     },
     donateCount(){
-        return 0;
+        return this.profile.donation ? this.profile.donation.counter : 0;
     },
     accWeight(){
-        return 0;
+        return this.profile.donation ? (this.profile.donation.totalWeight * 0.001) : 0;
     },
     lastDonateTime(){
-        //return moment(t).format('YYYY-MM-DD HH:mm:ss');
-        return '';
+        if (this.profile.donation)
+            return moment(this.profile.donation.latestTime).format('YYYY-MM-DD HH:mm:ss');
+        return '-';
     },
     isSelected(){
         const fac = Session.get('admin.users.cursel');

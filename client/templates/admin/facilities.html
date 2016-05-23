@@ -11,8 +11,11 @@
             <th>类型</th>
             <th>所在地</th>
             <th>创建时间</th>
+            <th>当前称重(kg)</th>
+            <th>当前用户</th>
             <th>当前捐赠量(kg)</th>
             <th>累计捐赠量(kg)</th>
+            <th>累计捐赠次数</th>
             <th>状态</th>
             <th>管理</th>
         </tr>
@@ -33,9 +36,12 @@
             <td>{{getTypeName type}}</td>
             <td>{{addr}}</td>
             <td>{{timeText createdAt}}</td>
-            <td>{{g2kg curWeight}}</td>
-            <td>{{g2kg accWeight}}</td>
-            <td>{{status}}</td>
+            <td>{{curTrayWeight}}</td>
+            <td>{{{curTrayUser}}}</td>
+            <td>{{curDonateWeight}}</td>
+            <td>{{totalDonateWeight}}</td>
+            <td>{{totalDonateCounter}}</td>
+            <td>{{curStatus}}</td>
             <td>
                 <button class="btn btn-danger btn-xs remove">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>

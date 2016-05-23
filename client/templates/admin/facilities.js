@@ -24,9 +24,7 @@ Template.facilityRow.helpers({
             return true;
         if (this._id.indexOf(filter) >= 0)
             return true;
-        if (this.addr.includes(filter))
-            return true;
-        return false;
+        return this.addr.includes(filter);
     },
     getTypeName(type){
         const rec = FacilityTypes.findOne({type: Number(type)});
@@ -42,9 +40,51 @@ Template.facilityRow.helpers({
         if (!t) return '';
         return moment(t).tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm:ss');
     },
-    g2kg(g){
-        if (!g) return 0;
-        return Number(g) * 0.001;
+    curTrayWeight(){
+        if (!this.donating)
+            return 0;
+        return Number(this.donating.weight) * 0.001;
+    },
+    curTrayUser(){
+        if (!this.donating || !this.donating.userId)
+            return '';
+        let user = Meteor.users.findOne(this.donating.userId);
+        if (!user || !user.profile)
+            return '<无效用户>';
+        let imgs = '';
+        let info = user.profile.wxinfo;
+        if (info.headImageUrl)
+            imgs = `<img src="${info.headImageUrl}" width="25">`;
+        return imgs + info.nickname;
+    },
+    curDonateWeight(){
+        if (!this.donation)
+            return 0;
+        return Number(this.donation.weight) * 0.001;
+    },
+    totalDonateWeight(){
+        if (!this.donation)
+            return 0;
+        return Number(this.donation.totalWeight) * 0.001;
+    },
+    totalDonateCounter(){
+        if (!this.donation)
+            return 0;
+        return Number(this.donation.counter);
+    },
+    curStatus(){
+        let caption = FacilityStateNames[0];
+        if (this.state > 0){
+            caption = '';
+            for (let i = 0; i < FacilityStateNames.length - 1; ++i){
+                let n = 1 << i;
+                if ((this.state & n) != 0) {
+                    (caption.length > 0) && (caption += ', ');
+                    caption += FacilityStateNames[i + 1];
+                }
+            }
+        }
+        return caption;
     }
 });
 
