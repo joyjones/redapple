@@ -30,3 +30,5 @@ momentjs:moment
 nimble:restivus
 mrt:moment-timezone
 meteorhacks:aggregate
+http
+jparker:crypto-sha1
