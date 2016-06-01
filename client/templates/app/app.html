@@ -5,55 +5,77 @@
             margin: 0;
             padding: 8px;
         }
-        .tab1 .cap{
+        .userbar{
+            margin-bottom: 4px;
+            border: 2px solid #E6E6E6;
+            border-radius: 4px;
+            padding: 8px;
+            display: table;
+            width: 100%;
+            position: relative;
+        }
+        .userbar img.head{
+            float: left;
+            margin-right: 12px;
+        }
+        .userbar .nickname{
+            font-size: 2em;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+        .userbar .total{
+            font-size: 1.1em;
+            margin-top: 8px;
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+        }
+        #pnl-donation .cap{
             margin: 8px;
         }
-        .tab1 .weight{
+        #pnl-donation .weight{
             text-align: center;
         }
-        .tab1 .weight .num{
+        #pnl-donation .weight .num{
             font-size: 4em;
             font-weight: bold;
         }
-        .tab1 .weight .unit{
+        #pnl-donation .weight .unit{
             font-size: 2em;
         }
-        .tab2 .donation{
+        #pnl-history .donation{
 
         }
     </style>
     <div class="userbar">
-        <img width="100" src="http://img3.imgtn.bdimg.com/it/u=1940481624,3917285320&fm=11&gp=0.jpg">
-        <div>孤胆飞影</div>
-        <div>累计捐赠: 12.99KG</div>
+        <img class="head" width="80" src="http://img3.imgtn.bdimg.com/it/u=1940481624,3917285320&fm=11&gp=0.jpg">
+        <div class="nickname">孤胆飞影</div>
+        <div class="total">累计捐赠: {{totalWeight}}</div>
     </div>
-    <div class="">
+    <div class="main">
         <ul class="nav nav-tabs">
-            <li role="presentation" class="active">
-                <a href="#">本次捐赠</a>
+            <li role="presentation" class="donation active">
+                <a href="#pnl-donation">本次捐赠</a>
             </li>
-            <li role="presentation">
-                <a href="#">捐赠历史</a>
+            <li role="presentation" class="history">
+                <a href="#pnl-history">捐赠历史</a>
             </li>
         </ul>
         <div class="tab-content">
-            {{#if firstTab}}
-                <div class="tab1">
-                    <div class="cap">本次捐赠重量:</div>
-                    <div class="weight">
-                        <span class="num">{{curWeight}}</span>
-                        <span class="unit">g</span>
-                    </div>
+            <div role="tabpanel" class="tab-pane active" id="pnl-donation">
+                <div class="cap">本次捐赠重量:</div>
+                <div class="weight">
+                    <span class="num">{{curWeight}}</span>
+                    <span class="unit">g</span>
                 </div>
-            {{else}}
-                <div class="tab2">
-                    {{#each donations}}
-                        <div class="donation">
+            </div>
+            <div role="tabpanel" class="tab-pane" id="pnl-history">
+                {{#each donations}}
+                    <div class="donation">
 
-                        </div>
-                    {{/each}}
-                </div>
-            {{/if}}
+                    </div>
+                {{/each}}
+            </div>
         </div>
     </div>
 </template>

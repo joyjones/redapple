@@ -66,6 +66,67 @@ const weixin = {
             Storage.update({_id: rec._id}, {$set: {'weixin.accessToken': wxrec.accessToken}});
         }
         return wxrec.accessToken.token;
+    },
+    login(sid) {
+        let user = Meteor.users.findOne({'profile.lastSessionId': sid});
+        if (user)
+            return user.profile.wxinfo;
+        return null;
+    },
+    authorize(code, sesId, router) {
+        if (!code)
+            return;
+
+        let errmsg = null;
+        const urls = {
+            authorization_code: 'https://api.weixin.qq.com/sns/oauth2/access_token',
+            client_credential: 'https://api.weixin.qq.com/cgi-bin/token',
+            userinfo: 'https://api.weixin.qq.com/sns/userinfo'
+        };
+        let url = urls.authorization_code;
+        url += "?grant_type=authorization_code";
+        url += `&appid=${appId}`;
+        url += `&secret=${appSecret}`;
+        url += `&code=${code}`;
+        let resp = HTTP.get(url);
+        if (!resp)
+            errmsg = `FAILED WX AUTHORIZATION: granting with code ${code}`;
+        else if (!resp.openid || !resp.openid.length)
+            errmsg = `FAILED WX AUTHORIZATION: null openid granted with code ${code}`;
+        else {
+            url = urls.userinfo;
+            url += "?access_token=" + resp.access_token;
+            url += "&openid=" + resp.openid;
+            url += "&lang=zh_CN";
+            let info = HTTP.get(url);
+            if (info && info.openid){
+                let user = Meteor.users.findOne({'profile.wxinfo.openid': info.openid});
+                if (!user){
+                    user = {
+                        _id: Accounts.createUser({
+                            username: info.nickname,
+                            email: sid + '@redapple.com',
+                            password: sid,
+                            profile: {
+                                wxinfo: info,
+                                lastSessionId: sid
+                            }
+                        })
+                    };
+                }
+                Meteor.users.update({_id: user._id}, {$set: {'profile.lastSessionId': sid}});
+            }else{
+                errmsg = `FAILED WX AUTHORIZATION: no user info with code ${code}`;
+            }
+
+            if (!errmsg){
+                router.response.writeHead(302, {
+                    'Location': 'http://a.muwu.net'
+                });
+                router.response.end();
+            }
+            return errmsg;
+        }
     }
 };
 
@@ -76,5 +137,19 @@ let api = new Restivus({
 api.addRoute('weixin/sign', {authRequired: false}, {
     get: function () {
         return weixin.getSignPackage();
+    }
+});
+api.addRoute('weixin/authorize', {authRequired: false}, {
+    get: function () {
+        var code = this.queryParams.code;
+        var sid = this.queryParams.sid;
+        var err = weixin.authorize(code, sid, this);
+        if (err) return err;
+    }
+});
+api.addRoute('weixin/login', {authRequired: false}, {
+    get: function () {
+        var sid = this.queryParams.sid;
+        return weixin.login(sid);
     }
 });
