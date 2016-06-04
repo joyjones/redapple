@@ -25,13 +25,33 @@ Template.app.events({
 const weixin = {
     debug: false,
     info: {
-        title: '百色熊墙面光泽大作战',
-        desc: '涂料分光泽，墙面有光彩，挑战游戏，赢取百色熊好礼！',
-        imgUrl: 'http://behr.sinaapp.com/paint/images/logo.jpg'
+        title: '红苹果慈善捐助',
+        desc: '红苹果慈善捐助, 感谢大家每一份热心',
+        imgUrl: 'http://7xj9u3.com1.z0.glb.clouddn.com/redapple/logo_admin0.jpg?imageView2/2/w/50/h/50'
     },
     fillShare(info) {
         wx.onMenuShareAppMessage(info);
         wx.onMenuShareTimeline(info);
+    },
+    login(callbk){
+        let me = this;
+        $.ajax({
+            url: 'http://a.muwu.net/api/weixin/login',
+            dataType: 'json',
+            error(r, s, e){
+                console.log(s, e);
+                alert('访问微信登陆接口失败！');
+                me.authorize();
+            },
+            success(resp){
+                if (!resp.success)
+                    me.authorize();
+                else{
+                    localStorage.setItem('redapple_userinfo', JSON.stringify(resp.data));
+                    callbk && callbk();
+                }
+            }
+        })
     },
     init(callbk){
         if (this.debug) return;
@@ -93,10 +113,11 @@ Template.app.onCreated(function(){
         localStorage.setItem(SESSION_KEY, Meteor.connection._lastSessionId);
     }
     setTimeout(function () {
-        //weixin.init(function(){
-        //    console.log('wx sign ok!');
-        //});
-        weixin.authorize();
+        weixin.login(function(){
+            weixin.init(function(){
+                console.log('wx sign ok!');
+            });
+        });
     }, 1000);
 });
 //http://a.muwu.net/api/weixin/authorize?sid=HjrCPa3Wvogtxbcf8&code=021BcmnU1MEsB918vepU1nKinU1Bcmnu&state=0

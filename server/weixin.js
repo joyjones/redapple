@@ -70,8 +70,8 @@ const weixin = {
     login(sid) {
         let user = Meteor.users.findOne({'profile.lastSessionId': sid});
         if (user)
-            return user.profile.wxinfo;
-        return null;
+            return {success: true, data: user.profile.wxinfo};
+        return {success: false};
     },
     authorize(code, sesId, router) {
         const ERRHEAD = `FAILED WX AUTHORIZATION: code=${code}, sessionId=${sesId}<br>`;
@@ -144,8 +144,8 @@ api.addRoute('weixin/authorize', {authRequired: false}, {
         var code = this.queryParams.code;
         var sid = this.queryParams.sid;
         var err = weixin.authorize(code, sid, this);
-        if (err) return err;
-        return {};
+        if (err) return {success: false, errmsg: err};
+        return {success: true};
     }
 });
 api.addRoute('weixin/login', {authRequired: false}, {
