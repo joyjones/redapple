@@ -133,11 +133,12 @@ const weixin = {
     },
     authorize: function(){
         let sesId = localStorage.getItem(STORAGEKEY_SESID);
+        let facId = window.location.search.substr(1).split('&')[0].split('=')[1];
 
         var url = "https://open.weixin.qq.com/connect/oauth2/authorize";
         url += "?appid=wxead90fdd2f6847ff";
         url += "&redirect_uri=";
-        url += encodeURIComponent(this.baseUrl + "api/weixin/authorize?sid=" + sesId);
+        url += encodeURIComponent(this.baseUrl + `api/weixin/authorize?sid=${sesId}&facility_id=${facId}`);
         url += "&response_type=code&scope=snsapi_userinfo";
         url += "&state=0";
         url += "#wechat_redirect";

@@ -70,12 +70,15 @@ const weixin = {
     login(sid) {
         if (sid && sid.length) {
             let user = Meteor.users.findOne({'profile.lastSessionId': sid});
-            if (user)
-                return {success: true, data: user.profile};
+            if (user) {
+                let acc = user.emails[0].address;
+                let pas = acc.split('@')[0];
+                return {success: true, account: acc, password: pas};
+            }
         }
         return {success: false};
     },
-    authorize(code, sesId, router) {
+    authorize(code, sesId, facId, router) {
         const ERRHEAD = `FAILED WX AUTHORIZATION: code=${code}, sessionId=${sesId}<br>`;
         if (!code || !sesId)
             return ERRHEAD;
@@ -125,7 +128,7 @@ const weixin = {
         Meteor.users.update({_id: user._id}, {$set: {'profile.lastSessionId': sesId}});
 
         router.response.writeHead(301, {
-            'Location': 'http://a.muwu.net'
+            'Location': 'http://a.muwu.net/?facility_id=' + facId
         });
         router.response.end();
         return null;
@@ -145,7 +148,8 @@ api.addRoute('weixin/authorize', {authRequired: false}, {
     get: function () {
         var code = this.queryParams.code;
         var sid = this.queryParams.sid;
-        var err = weixin.authorize(code, sid, this);
+        var facId = this.queryParams.facility_id;
+        var err = weixin.authorize(code, sid, facId, this);
         if (err) return {success: false, errmsg: err};
         return {success: true};
     }
