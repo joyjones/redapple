@@ -3,18 +3,33 @@
  */
 Template.app.helpers({
     userHead(){
-        let info = Session.get(STORAGEKEY_USERINFO);
-        return info ? info.headimgurl : '';
+        let info = Meteor.user().profile;
+        return info ? info.wxinfo.headimgurl : '';
     },
     userName(){
-        let info = Session.get(STORAGEKEY_USERINFO);
-        return info ? info.nickname : '';
+        let info = Meteor.user().profile;
+        return info ? info.wxinfo.nickname : '';
     },
     curWeight(){
-        return 0;
+        let info = Meteor.user().profile;
+        return (info && info.donating) ? info.donating.weight : 0;
     },
     totalWeight(){
-        return 0;
+        let info = Meteor.user().profile;
+        let g = (info && info.donation) ? info.donation.totalWeight : 0;
+        return (g * 0.001) + 'kg';
+    },
+    tabClsCurr(){
+        let cls = Session.get('tabindex') === 1 ? '' : 'active ';
+        let info = Meteor.user().profile;
+        return cls + ((info && info.donating) ? '' : 'hidden');
+    },
+    tabClsHistory(){
+        let cls = Session.get('tabindex') === 1 ? 'active' : '';
+        return cls;
+    },
+    donations(){
+        return Session.get('myDonations');
     }
 });
 
@@ -29,6 +44,7 @@ Template.app.events({
 
 const weixin = {
     debug: window.location.href.indexOf('localhost') >= 0,
+    baseUrl: window.location.href.indexOf('localhost') >= 0 ? 'http://localhost:3000/' : 'http://a.muwu.net/',
     info: {
         title: '红苹果慈善捐助',
         desc: '红苹果慈善捐助, 感谢大家每一份热心',
@@ -41,13 +57,12 @@ const weixin = {
     login(callbk){
         let me = this;
         if (me.debug){
-            Session.set(STORAGEKEY_USERINFO, {"nickname":"李志勇","sex":1,"country":"中国","province":"北京","city":"北京","headImageUrl":"http://7xj9u3.com1.z0.glb.clouddn.com/redapple/logo_admin0.jpg?imageView2/2/w/50/h/50"});
-            callbk && callbk();
+            me.fillUser('wuxiaotan@admin.com', 'admin.Wuxiaotan', callbk);
             return;
         }
         let sesId = localStorage.getItem(STORAGEKEY_SESID);
         $.ajax({
-            url: 'http://a.muwu.net/api/weixin/login?sid=' + sesId,
+            url: me.baseUrl + 'api/weixin/login?sid=' + sesId,
             dataType: 'json',
             error(r, s, e){
                 console.log(s, e);
@@ -58,17 +73,27 @@ const weixin = {
                 if (!resp.success)
                     me.authorize();
                 else{
-                    localStorage.setItem(STORAGEKEY_USERINFO, JSON.stringify(resp.data));
-                    Session.set(STORAGEKEY_USERINFO, resp.data);
-                    callbk && callbk();
+                    me.fillUser(resp.account, resp.password, callbk);
                 }
             }
         })
     },
+    fillUser(acc, psw, callbk){
+        Meteor.loginWithPassword(acc, psw, function(err){
+            if(err)
+                Session.set('errorMessage', err.message);
+            else{
+                let info = Meteor.user().profile;
+                if (!info.donating)
+                    Session.set('tabindex', 1);
+                callbk && callbk();
+            }
+        });
+    },
     init(callbk){
         if (this.debug) return;
         $.ajax({
-            url: 'http://a.muwu.net/api/weixin/sign',
+            url: this.baseUrl + 'api/weixin/sign',
             dataType: 'json',
             error(r, s, e){
                 console.log(s, e);
@@ -112,7 +137,7 @@ const weixin = {
         var url = "https://open.weixin.qq.com/connect/oauth2/authorize";
         url += "?appid=wxead90fdd2f6847ff";
         url += "&redirect_uri=";
-        url += encodeURIComponent("http://a.muwu.net/api/weixin/authorize?sid=" + sesId);
+        url += encodeURIComponent(this.baseUrl + "api/weixin/authorize?sid=" + sesId);
         url += "&response_type=code&scope=snsapi_userinfo";
         url += "&state=0";
         url += "#wechat_redirect";
@@ -124,12 +149,35 @@ Template.app.onCreated(function(){
     if (!localStorage.getItem(STORAGEKEY_SESID)) {
         localStorage.setItem(STORAGEKEY_SESID, Meteor.connection._lastSessionId);
     }
+    let facId = window.location.search.substr(1).split('&')[0].split('=')[1];
+    let userId = Meteor.userId();
     setTimeout(function () {
         weixin.login(function(){
             weixin.init(function(){
                 console.log('wx sign ok!');
             });
+            $.ajax({
+                url: weixin.baseUrl + `api/facility/bind-user?user_id=${userId}&facility_id=${facId}`,
+                dataType: 'json',
+                type: 'put',
+                error(r, s, e){
+                    console.log(s, e);
+                },
+                success(resp){
+                    console.log(resp);
+                }
+            });
+            $.ajax({
+                url: weixin.baseUrl + `api/donation/history?user_id=${userId}`,
+                dataType: 'json',
+                error(r, s, e){
+                    console.log(s, e);
+                },
+                success(resp){
+                    console.log(resp);
+                    Session.set('myDonations', resp);
+                }
+            });
         });
     }, 1000);
 });
-//http://a.muwu.net/api/weixin/authorize?sid=HjrCPa3Wvogtxbcf8&code=021BcmnU1MEsB918vepU1nKinU1Bcmnu&state=0

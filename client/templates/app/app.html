@@ -30,21 +30,31 @@
             bottom: 8px;
             right: 8px;
         }
-        #pnl-donation .cap{
+        .main .area{
+            border: 1px solid #E6E6E6;
+            border-radius: 4px;
             margin: 8px;
+            padding: 8px;
         }
-        #pnl-donation .weight{
+        .main .area .title{
+            font-weight: bold;
+            font-size: 1.25em;
+        }
+        .main .area.donation .content .weight{
             text-align: center;
         }
-        #pnl-donation .weight .num{
+        .main .area.donation .content .weight{
+            text-align: center;
+        }
+        .main .area.donation .content .weight .num{
             font-size: 4em;
             font-weight: bold;
         }
-        #pnl-donation .weight .unit{
+        .main .area.donation .content .weight .unit{
             font-size: 2em;
         }
-        #pnl-history .donation{
-
+        .main .area.history .content .donate-item span{
+            margin-right: 4px;
         }
     </style>
     <div class="userbar">
@@ -53,29 +63,26 @@
         <div class="total">累计捐赠: {{totalWeight}}</div>
     </div>
     <div class="main">
-        <ul class="nav nav-tabs">
-            <li role="presentation" class="donation active">
-                <a href="#pnl-donation">本次捐赠</a>
-            </li>
-            <li role="presentation" class="history">
-                <a href="#pnl-history">捐赠历史</a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="pnl-donation">
-                <div class="cap">本次捐赠重量:</div>
+        <div class="area donation {{tabClsCurr}}">
+            <div class="title">本次捐赠</div>
+            <div class="content">
                 <div class="weight">
                     <span class="num">{{curWeight}}</span>
                     <span class="unit">g</span>
                 </div>
             </div>
-            <div role="tabpanel" class="tab-pane" id="pnl-history">
+        </div>
+        <div class="area history {{tabClsHistory}}">
+            <div class="title">捐赠历史</div>
+            <ul class="content">
                 {{#each donations}}
-                    <div class="donation">
-
-                    </div>
+                    <li class="donate-item">
+                        <span>{{time}}</span>
+                        <span>{{facilityName}}</span>
+                        <span>{{weight}}g</span>
+                    </li>
                 {{/each}}
-            </div>
+            </ul>
         </div>
     </div>
 </template>

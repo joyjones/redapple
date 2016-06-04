@@ -71,7 +71,7 @@ const weixin = {
         if (sid && sid.length) {
             let user = Meteor.users.findOne({'profile.lastSessionId': sid});
             if (user)
-                return {success: true, data: user.profile.wxinfo};
+                return {success: true, data: user.profile};
         }
         return {success: false};
     },
