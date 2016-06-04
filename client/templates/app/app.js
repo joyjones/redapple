@@ -3,10 +3,12 @@
  */
 Template.app.helpers({
     userHead(){
-        return Session.get(STORAGEKEY_USERINFO).headimgurl;
+        let info = Session.get(STORAGEKEY_USERINFO);
+        return info ? info.headImageUrl : '';
     },
     userName(){
-        return Session.get(STORAGEKEY_USERINFO).nickname;
+        let info = Session.get(STORAGEKEY_USERINFO);
+        return info ? info.nickname : '';
     },
     curWeight(){
         return 0;
@@ -26,7 +28,7 @@ Template.app.events({
 });
 
 const weixin = {
-    debug: false,
+    debug: window.location.href.indexOf('localhost') >= 0,
     info: {
         title: '红苹果慈善捐助',
         desc: '红苹果慈善捐助, 感谢大家每一份热心',
@@ -38,6 +40,11 @@ const weixin = {
     },
     login(callbk){
         let me = this;
+        if (me.debug){
+            Session.set(STORAGEKEY_USERINFO, {"nickname":"李志勇","sex":1,"country":"中国","province":"北京","city":"北京","headImageUrl":"http://7xj9u3.com1.z0.glb.clouddn.com/redapple/logo_admin0.jpg?imageView2/2/w/50/h/50"});
+            callbk && callbk();
+            return;
+        }
         $.ajax({
             url: 'http://a.muwu.net/api/weixin/login',
             dataType: 'json',
