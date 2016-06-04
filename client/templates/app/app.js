@@ -89,6 +89,9 @@ const weixin = {
 };
 
 Template.app.onCreated(function(){
+    if (!localStorage.getItem(SESSION_KEY)) {
+        localStorage.setItem(SESSION_KEY, Meteor.connection._lastSessionId);
+    }
     setTimeout(function () {
         //weixin.init(function(){
         //    console.log('wx sign ok!');
@@ -96,3 +99,4 @@ Template.app.onCreated(function(){
         weixin.authorize();
     }, 1000);
 });
+//http://a.muwu.net/api/weixin/authorize?sid=null&code=0117U5o52SN5TH0A3Qq52758o527U5on&state=0

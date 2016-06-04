@@ -74,10 +74,10 @@ const weixin = {
         return null;
     },
     authorize(code, sesId, router) {
+        let errmsg = 'FAILED WX AUTHORIZATION: none code';
         if (!code)
-            return;
+            return errmsg;
 
-        let errmsg = null;
         const urls = {
             authorization_code: 'https://api.weixin.qq.com/sns/oauth2/access_token',
             client_credential: 'https://api.weixin.qq.com/cgi-bin/token',
