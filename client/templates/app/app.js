@@ -3,25 +3,25 @@
  */
 Template.app.helpers({
     userHead(){
-        let info = Meteor.user().profile;
+        let info = Meteor.user() ? Meteor.user().profile : null;
         return info ? info.wxinfo.headimgurl : '';
     },
     userName(){
-        let info = Meteor.user().profile;
+        let info = Meteor.user() ? Meteor.user().profile : null;
         return info ? info.wxinfo.nickname : '';
     },
     curWeight(){
-        let info = Meteor.user().profile;
+        let info = Meteor.user() ? Meteor.user().profile : null;
         return (info && info.donating) ? info.donating.weight : 0;
     },
     totalWeight(){
-        let info = Meteor.user().profile;
+        let info = Meteor.user() ? Meteor.user().profile : null;
         let g = (info && info.donation) ? info.donation.totalWeight : 0;
         return (g * 0.001) + 'kg';
     },
     tabClsCurr(){
         let cls = Session.get('tabindex') === 1 ? '' : 'active ';
-        let info = Meteor.user().profile;
+        let info = Meteor.user() ? Meteor.user().profile : null;
         return cls + ((info && info.donating) ? '' : 'hidden');
     },
     tabClsHistory(){

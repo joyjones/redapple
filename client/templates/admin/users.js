@@ -28,8 +28,8 @@ Template.userRow.helpers({
     userInfo(){
         let imgs = '';
         let info = this.profile.wxinfo;
-        if (info.headImageUrl)
-            imgs = `<img src="${info.headImageUrl}" width="25">`;
+        if (info.headimgurl)
+            imgs = `<img src="${info.headimgurl}" width="25">`;
         return imgs + info.nickname + "(" + this._id + ")";
     },
     userType(){
