@@ -2,20 +2,23 @@
  * Created by jones on 16/5/22.
  */
 Template.app.helpers({
+    userHead(){
+        return Session.get(STORAGEKEY_USERINFO).headimgurl;
+    },
+    userName(){
+        return Session.get(STORAGEKEY_USERINFO).nickname;
+    },
     curWeight(){
-        return 437;
+        return 0;
     },
     totalWeight(){
-        let n = localStorage.getItem('id');
-        return n + ' kg';
+        return 0;
     }
 });
 
 Template.app.events({
     'click .nav-tabs a'(e){
         $(e.target).tab('show');
-
-        localStorage.setItem('id', Meteor.connection._lastSessionId);
     },
     'onload body'(){
         $(this).css({});
@@ -47,7 +50,8 @@ const weixin = {
                 if (!resp.success)
                     me.authorize();
                 else{
-                    localStorage.setItem('redapple_userinfo', JSON.stringify(resp.data));
+                    localStorage.setItem(STORAGEKEY_USERINFO, JSON.stringify(resp.data));
+                    Session.set(STORAGEKEY_USERINFO, resp.data);
                     callbk && callbk();
                 }
             }
@@ -95,7 +99,7 @@ const weixin = {
         });
     },
     authorize: function(){
-        let sesId = localStorage.getItem(SESSION_KEY);
+        let sesId = localStorage.getItem(STORAGEKEY_SESID);
 
         var url = "https://open.weixin.qq.com/connect/oauth2/authorize";
         url += "?appid=wxead90fdd2f6847ff";
@@ -109,8 +113,8 @@ const weixin = {
 };
 
 Template.app.onCreated(function(){
-    if (!localStorage.getItem(SESSION_KEY)) {
-        localStorage.setItem(SESSION_KEY, Meteor.connection._lastSessionId);
+    if (!localStorage.getItem(STORAGEKEY_SESID)) {
+        localStorage.setItem(STORAGEKEY_SESID, Meteor.connection._lastSessionId);
     }
     setTimeout(function () {
         weixin.login(function(){
