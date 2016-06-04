@@ -111,16 +111,16 @@ const weixin = {
             user = {
                 _id: Accounts.createUser({
                     username: info.nickname,
-                    email: sid + '@redapple.com',
-                    password: sid,
+                    email: sesId + '@redapple.com',
+                    password: sesId,
                     profile: {
                         wxinfo: info,
-                        lastSessionId: sid
+                        lastSessionId: sesId
                     }
                 })
             };
         }
-        Meteor.users.update({_id: user._id}, {$set: {'profile.lastSessionId': sid}});
+        Meteor.users.update({_id: user._id}, {$set: {'profile.lastSessionId': sesId}});
 
         router.response.writeHead(301, {
             'Location': 'http://a.muwu.net'
