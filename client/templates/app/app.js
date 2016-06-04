@@ -45,8 +45,9 @@ const weixin = {
             callbk && callbk();
             return;
         }
+        let sesId = localStorage.getItem(STORAGEKEY_SESID);
         $.ajax({
-            url: 'http://a.muwu.net/api/weixin/login',
+            url: 'http://a.muwu.net/api/weixin/login?sid=' + sesId,
             dataType: 'json',
             error(r, s, e){
                 console.log(s, e);

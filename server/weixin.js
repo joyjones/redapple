@@ -68,9 +68,11 @@ const weixin = {
         return wxrec.accessToken.token;
     },
     login(sid) {
-        let user = Meteor.users.findOne({'profile.lastSessionId': sid});
-        if (user)
-            return {success: true, data: user.profile.wxinfo};
+        if (sid && sid.length) {
+            let user = Meteor.users.findOne({'profile.lastSessionId': sid});
+            if (user)
+                return {success: true, data: user.profile.wxinfo};
+        }
         return {success: false};
     },
     authorize(code, sesId, router) {
