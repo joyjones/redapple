@@ -145,6 +145,7 @@ api.addRoute('weixin/authorize', {authRequired: false}, {
         var sid = this.queryParams.sid;
         var err = weixin.authorize(code, sid, this);
         if (err) return err;
+        return '';
     }
 });
 api.addRoute('weixin/login', {authRequired: false}, {

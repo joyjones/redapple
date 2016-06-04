@@ -99,4 +99,4 @@ Template.app.onCreated(function(){
         weixin.authorize();
     }, 1000);
 });
-//http://a.muwu.net/api/weixin/authorize?sid=null&code=0117U5o52SN5TH0A3Qq52758o527U5on&state=0
+//http://a.muwu.net/api/weixin/authorize?sid=HjrCPa3Wvogtxbcf8&code=021BcmnU1MEsB918vepU1nKinU1Bcmnu&state=0
