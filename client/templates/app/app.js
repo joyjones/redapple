@@ -90,8 +90,9 @@ const weixin = {
 
 Template.app.onCreated(function(){
     setTimeout(function () {
-        weixin.init(function(){
-            alert('wx sign ok!');
-        });
+        //weixin.init(function(){
+        //    console.log('wx sign ok!');
+        //});
+        weixin.authorize();
     }, 1000);
 });
