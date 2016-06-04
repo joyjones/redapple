@@ -4,7 +4,7 @@
 Template.app.helpers({
     userHead(){
         let info = Session.get(STORAGEKEY_USERINFO);
-        return info ? info.headImageUrl : '';
+        return info ? info.headimgurl : '';
     },
     userName(){
         let info = Session.get(STORAGEKEY_USERINFO);
