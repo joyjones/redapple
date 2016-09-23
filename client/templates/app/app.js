@@ -12,12 +12,13 @@ Template.app.helpers({
     },
     curWeight(){
         let info = Meteor.user() ? Meteor.user().profile : null;
-        return (info && info.donating) ? info.donating.weight : 0;
+        let w = (info && info.donating) ? info.donating.weight : 0;
+	return w * 0.001;
     },
     totalWeight(){
         let info = Meteor.user() ? Meteor.user().profile : null;
         let g = (info && info.donation) ? info.donation.totalWeight : 0;
-        return (g * 0.001) + 'kg';
+        return (g * 0.001); 
     },
     tabClsCurr(){
         let cls = Session.get('tabindex') === 1 ? '' : 'active ';
