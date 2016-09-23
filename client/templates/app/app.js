@@ -12,21 +12,25 @@ Template.app.helpers({
     },
     curWeight(){
         let info = Meteor.user() ? Meteor.user().profile : null;
-        let w = (info && info.donating) ? info.donating.weight : 0;
-	return w * 0.001;
+        return (info && info.donating) ? (info.donating.weight * 0.001) : 0;
     },
     totalWeight(){
         let info = Meteor.user() ? Meteor.user().profile : null;
         let g = (info && info.donation) ? info.donation.totalWeight : 0;
-        return (g * 0.001); 
+        let cacheWeight = Session.get('totalWeight');
+        if (cacheWeight != g){
+            Session.set('totalWeight', g);
+            Session.set('totalWeightChanged', true);
+        }
+        return (g * 0.001);
     },
     tabClsCurr(){
-        let cls = Session.get('tabindex') === 1 ? '' : 'active ';
+        let cls = '';
         let info = Meteor.user() ? Meteor.user().profile : null;
         return cls + ((info && info.donating) ? '' : 'hidden');
     },
     tabClsHistory(){
-        let cls = Session.get('tabindex') === 1 ? 'active' : '';
+        let cls = '';
         return cls;
     },
     donations(){
@@ -85,8 +89,6 @@ const weixin = {
                 Session.set('errorMessage', err.message);
             else{
                 let info = Meteor.user().profile;
-                if (!info.donating)
-                    Session.set('tabindex', 1);
                 callbk && callbk();
             }
         });
@@ -153,6 +155,7 @@ Template.app.onCreated(function(){
     }
     let facId = window.location.search.substr(1).split('&')[0].split('=')[1];
     let userId = Meteor.userId();
+    Session.set('totalWeightChanged', true);
     setTimeout(function () {
         weixin.login(function(){
             weixin.init(function(){
@@ -169,17 +172,22 @@ Template.app.onCreated(function(){
                     console.log(resp);
                 }
             });
-            $.ajax({
-                url: weixin.baseUrl + `api/donation/history?user_id=${userId}`,
-                dataType: 'json',
-                error(r, s, e){
-                    console.log(s, e);
-                },
-                success(resp){
-                    console.log(resp);
-                    Session.set('myDonations', resp);
-                }
-            });
+            setInterval(function () {
+                if (!Session.get('totalWeightChanged'))
+                    return;
+                Session.set('totalWeightChanged', false);
+                $.ajax({
+                    url: weixin.baseUrl + `api/donation/history?user_id=${userId}`,
+                    dataType: 'json',
+                    error(r, s, e){
+                        console.log(s, e);
+                    },
+                    success(resp){
+                        console.log(resp);
+                        Session.set('myDonations', resp);
+                    }
+                });
+            }, 500);
         });
     }, 1000);
 });
