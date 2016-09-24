@@ -1,0 +1,41 @@
+
+<template name="adminUsers">
+    <div class="form-group">
+        <label for="userFilter">查找用户</label>
+        <input type="text" class="form-control" id="userFilter" placeholder="请输入ID或昵称并回车">
+    </div>
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>用户</th>
+                <th>类型</th>
+                <th>性别</th>
+                <th>来自</th>
+                <th>注册时间</th>
+                <th>捐赠次数</th>
+                <th>累计重量(kg)</th>
+                <th>最后捐赠时间</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each users}}
+            {{> userRow}}
+        {{/each}}
+        </tbody>
+    </table>
+</template>
+
+<template name="userRow">
+    {{#if isVisible}}
+        <tr class="userrow {{#if isSelected}}selected{{/if}}">
+            <td>{{{userInfo}}}</td>
+            <td>{{userType}}</td>
+            <td>{{sexType}}</td>
+            <td>{{comeFrom}}</td>
+            <td>{{registerTime}}</td>
+            <td>{{donateCount}}</td>
+            <td>{{accWeight}}</td>
+            <td>{{lastDonateTime}}</td>
+        </tr>
+    {{/if}}
+</template>

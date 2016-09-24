@@ -1,0 +1,88 @@
+
+<template name="app">
+    <style>
+        body{
+            margin: 0;
+            padding: 8px;
+        }
+        .userbar{
+            margin-bottom: 4px;
+            border: 2px solid #E6E6E6;
+            border-radius: 4px;
+            padding: 8px;
+            display: table;
+            width: 100%;
+            position: relative;
+        }
+        .userbar img.head{
+            float: left;
+            margin-right: 12px;
+        }
+        .userbar .nickname{
+            font-size: 2em;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+        .userbar .total{
+            font-size: 1.1em;
+            margin-top: 8px;
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+        }
+        .main .area{
+            border: 1px solid #E6E6E6;
+            border-radius: 4px;
+            margin: 8px;
+            padding: 8px;
+        }
+        .main .area .title{
+            font-weight: bold;
+            font-size: 1.25em;
+        }
+        .main .area.donation .content .weight{
+            text-align: center;
+        }
+        .main .area.donation .content .weight{
+            text-align: center;
+        }
+        .main .area.donation .content .weight .num{
+            font-size: 4em;
+            font-weight: bold;
+        }
+        .main .area.donation .content .weight .unit{
+            font-size: 2em;
+        }
+        .main .area.history .content .donate-item span{
+            margin-right: 4px;
+        }
+    </style>
+    <div class="userbar">
+        <img class="head" width="80" src="{{userHead}}">
+        <div class="nickname">{{userName}}</div>
+        <div class="total">累计捐赠: {{totalWeight}}公斤</div>
+    </div>
+    <div class="main">
+        <div class="area donation {{tabClsCurr}}">
+            <div class="title">本次捐赠</div>
+            <div class="content">
+                <div class="weight">
+                    <span class="num">{{curWeight}}</span>
+                    <span class="unit">公斤</span>
+                </div>
+            </div>
+        </div>
+        <div class="area history {{tabClsHistory}}">
+            <div class="title">捐赠历史</div>
+            <ul class="content">
+                {{#each donations}}
+                    <li class="donate-item">
+                        <span>{{time}}</span>
+                        <span>{{facilityName}}</span>
+                        <span>{{weight}}公斤</span>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</template>
