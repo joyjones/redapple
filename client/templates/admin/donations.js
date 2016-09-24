@@ -77,7 +77,7 @@ Template.donationRow.helpers({
     },
     weight2kg(){
         if (!this.weight) return 0;
-        return Number(this.weight) * 0.001;
+        return (Number(this.weight) * 0.001).toFixed(3);
     }
 });
 

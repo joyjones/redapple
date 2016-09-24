@@ -53,7 +53,7 @@ Template.userRow.helpers({
         return this.profile.donation ? this.profile.donation.counter : 0;
     },
     accWeight(){
-        return this.profile.donation ? (this.profile.donation.totalWeight * 0.001) : 0;
+        return this.profile.donation ? (this.profile.donation.totalWeight * 0.001).toFixed(3) : 0;
     },
     lastDonateTime(){
         if (this.profile.donation)

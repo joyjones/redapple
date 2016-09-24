@@ -12,7 +12,7 @@ Template.app.helpers({
     },
     curWeight(){
         let info = Meteor.user() ? Meteor.user().profile : null;
-        return (info && info.donating) ? (info.donating.weight * 0.001) : 0;
+        return (info && info.donating) ? (info.donating.weight * 0.001).toFixed(3) : 0;
     },
     totalWeight(){
         let info = Meteor.user() ? Meteor.user().profile : null;
@@ -22,7 +22,7 @@ Template.app.helpers({
             Session.set('totalWeight', g);
             Session.set('totalWeightChanged', true);
         }
-        return (g * 0.001);
+        return (g * 0.001).toFixed(3);
     },
     tabClsCurr(){
         let cls = '';

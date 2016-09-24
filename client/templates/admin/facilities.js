@@ -43,7 +43,7 @@ Template.facilityRow.helpers({
     curTrayWeight(){
         if (!this.donating)
             return 0;
-        return Number(this.donating.weight) * 0.001;
+        return (Number(this.donating.weight) * 0.001).toFixed(3);
     },
     curTrayUser(){
         if (!this.donating || !this.donating.userId)
@@ -60,12 +60,12 @@ Template.facilityRow.helpers({
     curDonateWeight(){
         if (!this.donation)
             return 0;
-        return Number(this.donation.weight) * 0.001;
+        return (Number(this.donation.weight) * 0.001).toFixed(3);
     },
     totalDonateWeight(){
         if (!this.donation)
             return 0;
-        return Number(this.donation.totalWeight) * 0.001;
+        return (Number(this.donation.totalWeight) * 0.001).toFixed(3);
     },
     totalDonateCounter(){
         if (!this.donation)
