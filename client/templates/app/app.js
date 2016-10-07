@@ -212,6 +212,9 @@ Template.app.onCreated(function(){
                 },
                 success(resp){
                     console.log(resp);
+                    if (resp.status == 'success'){
+                        Session.set('tabIndex', 1);
+                    }
                 }
             });
             setInterval(function () {
