@@ -3,6 +3,8 @@
  */
 Template.app.helpers({
     userHead(){
+        if (weixin.debug)
+            return 'img/head.jpg';
         let info = Meteor.user() ? Meteor.user().profile : null;
         return info ? info.wxinfo.headimgurl : '';
     },
@@ -12,6 +14,8 @@ Template.app.helpers({
     },
     curWeight(){
         let info = Meteor.user() ? Meteor.user().profile : null;
+        if (info && info.donating && Session.get('tabIndex') == 0)
+            Session.set('tabIndex', 1);
         return (info && info.donating) ? (info.donating.weight * 0.001).toFixed(3) : 0;
     },
     totalWeight(){
@@ -24,23 +28,59 @@ Template.app.helpers({
         }
         return (g * 0.001).toFixed(3);
     },
-    tabClsCurr(){
-        let cls = '';
+    areaClsCurWeight(){
         let info = Meteor.user() ? Meteor.user().profile : null;
-        return cls + ((info && info.donating) ? '' : 'hidden');
+        if (info && info.donating && Session.get('tabIndex') == 1)
+            return '';
+        return 'hidden';
+    },
+    areaClsHistory(){
+        if (Session.get('tabIndex') == 1)
+            return 'hidden';
+        return '';
+    },
+    tabClsCurWeight(){
+        let info = Meteor.user() ? Meteor.user().profile : null;
+        if (!info || !info.donating){
+            Session.set('tabIndex', 2);
+            return 'disabled';
+        }
+        if (info && info.donating && Session.get('tabIndex') == 1)
+            return 'selected';
+        return '';
     },
     tabClsHistory(){
-        let cls = '';
-        return cls;
+        if (Session.get('tabIndex') == 1)
+            return '';
+        return 'selected';
     },
     donations(){
         return Session.get('myDonations');
+    },
+    donateLocation(){
+        let info = Meteor.user() ? Meteor.user().profile : null;
+        return (info && info.donating) ? info.donating.location : '';
+    },
+    donateTime(){
+        let info = Meteor.user() ? Meteor.user().profile : null;
+        return (info && info.donating) ? info.donating.time : '';
+    },
+    getTypeName(type, fid){
+        let ft = FacilityTypes.findOne({type: Number(type)});
+        let fi = fid.substr(0, 5).toUpperCase();
+        return ft.name + fi;
     }
 });
 
 Template.app.events({
-    'click .nav-tabs a'(e){
-        $(e.target).tab('show');
+    'click .tabbar .item.item-this'(e){
+        let info = Meteor.user() ? Meteor.user().profile : null;
+        if (info && info.donating){
+            Session.set('tabIndex', 1);
+        }
+    },
+    'click .tabbar .item.item-history'(e){
+        Session.set('tabIndex', 2);
     },
     'onload body'(){
         $(this).css({});
@@ -153,8 +193,10 @@ Template.app.onCreated(function(){
     if (!localStorage.getItem(STORAGEKEY_SESID)) {
         localStorage.setItem(STORAGEKEY_SESID, Meteor.connection._lastSessionId);
     }
+    Session.set('tabIndex', 0);
+
     let facId = window.location.search.substr(1).split('&')[0].split('=')[1];
-    let userId = Meteor.userId();
+    let userId = weixin.debug ? '4AcNGdYKLKwurhoX2' : Meteor.userId();
     Session.set('totalWeightChanged', true);
     setTimeout(function () {
         weixin.login(function(){
